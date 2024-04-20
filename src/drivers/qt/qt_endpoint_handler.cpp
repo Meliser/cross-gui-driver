@@ -49,12 +49,20 @@ bool QtEndpointHandler::init()
     return true;
 }
 
+void QtEndpointHandler::post_and_wait(std::function<void(void)> f)
+{
+    auto task = std::make_shared<TaskEvent::TaskType>(f);
+    QEvent* te = new TaskEvent(m_gui_syncher->get_event_type(), task);
+    QCoreApplication::postEvent(m_gui_syncher.get(), te);
+    task->get_future().wait();
+}
+
 std::string QtEndpointHandler::getText(const std::string& name)
 {
     std::cout << "post event in thread " << std::this_thread::get_id() <<std::endl;
 
     std::string res;
-    auto f = [&res](const std::string& name)
+    auto f = [&res, &name]()
     {
         QString qname = QString::fromStdString(name);
         if (QWidget* w = findWidget(qname)) {
@@ -66,10 +74,6 @@ std::string QtEndpointHandler::getText(const std::string& name)
         }
     };
 
-    auto task = std::make_shared<TaskEvent::TaskType>(std::bind(f, name));
-    QEvent* te = new TaskEvent(m_gui_syncher->get_event_type(), task);
-    QCoreApplication::postEvent(m_gui_syncher.get(), te);
-    task->get_future().wait();
-    std::cout << "NOW RETURN RES" << std::endl;
+    post_and_wait(f);
     return res;
 }

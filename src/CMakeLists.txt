@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.10)
 
 project(cross-gui-driver)
 
@@ -14,6 +14,7 @@ add_subdirectory(drivers)
 
 set(server_src 
     main.cpp
+    endpoints/session.cpp
 )
 
 #add_executable(${PROJECT_NAME} ${server_src})

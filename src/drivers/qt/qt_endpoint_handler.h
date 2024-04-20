@@ -46,6 +46,8 @@ public:
     bool init() override;
     std::string getText(const std::string& name) override;
 private:
+    void post_and_wait(std::function<void(void)> f);
+private:
     std::unique_ptr<GuiSyncher> m_gui_syncher;
 };
 

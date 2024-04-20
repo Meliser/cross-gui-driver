@@ -5,27 +5,10 @@
 #include <nlohmann/json.hpp>
 #include <boost/dll/import.hpp>
 #include <boost/dll/alias.hpp>
-#include "endpoint_handler_i.h"
 
+#include <string_view>
 
-
-using namespace httpserver;
-class hello_world_res : public http_resource {
-public:
-    hello_world_res(std::unique_ptr<EndpointHandlerI> handler) : handler(std::move(handler))
-    {}
-    std::shared_ptr<http_response> render_POST(const http_request& req) {
-        using json = nlohmann::json;
-        
-        std::string_view content = req.get_content();
-        json data = json::parse(content);
-        const std::string& name = data["elementName"];
-        //std::cout << "GOT " << data << std::endl;
-        return std::shared_ptr<http_response>(new string_response(handler->getText(name)));
-    }
-private:
-    std::unique_ptr<EndpointHandlerI> handler;
-};
+#include "endpoints/session.h"
 
 using HandlerType = std::unique_ptr<EndpointHandlerI>();
 std::function<HandlerType> getEndpointHandler(const std::string& type)
@@ -48,14 +31,17 @@ namespace
     class DriverApp
     {
     public:
-        DriverApp() : m_ws(create_webserver().port(8080))
+        DriverApp() : m_ws(httpserver::create_webserver().port(8080))
         {
             std::cout << "Construct DriverApp" << std::endl;
+
             m_plugin_handle = getEndpointHandler("qt");
-            std::unique_ptr<EndpointHandlerI> h = m_plugin_handle();
+            std::shared_ptr<EndpointHandlerI> h = m_plugin_handle();
             h->init();
-            m_hwr = std::make_unique<hello_world_res>(std::move(h));
-            m_ws.register_resource("/hello", m_hwr.get());
+
+            m_session_h = std::make_unique<session>(h);
+            m_ws.register_resource("/session", m_session_h.get());
+            
             m_ws.start(false);
         }
         ~DriverApp()
@@ -64,8 +50,8 @@ namespace
         }
     private:
         std::function<HandlerType> m_plugin_handle;
-        webserver m_ws;
-        std::unique_ptr<hello_world_res> m_hwr;
+        httpserver::webserver m_ws;
+        std::unique_ptr<session> m_session_h;
     };
 
     std::unique_ptr<DriverApp> global_app;
