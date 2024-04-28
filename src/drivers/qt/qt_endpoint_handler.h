@@ -43,15 +43,18 @@ private:
 class QtEndpointHandler : public EndpointHandlerI
 {
 public:
-    bool init() override;
+    QtEndpointHandler(void*);
     std::string getText(const std::string& name) override;
+    std::string getTitle(const std::string& name) override;
+    void nameAll() override;
+    std::optional<WidgetRect> getWidgetRect(const std::string& name) override;
 private:
     void post_and_wait(std::function<void(void)> f);
 private:
     std::unique_ptr<GuiSyncher> m_gui_syncher;
 };
 
-std::unique_ptr<EndpointHandlerI> create();
+std::unique_ptr<EndpointHandlerI> create(void* config);
 
 BOOST_DLL_ALIAS(
     create,

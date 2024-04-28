@@ -7,8 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
-public class Plugin {
-    public void walkTree() {
+public class Controller {
+    static public void walkTree() {
         var list = javafx.stage.Window.getWindows();
         var listIter = list.iterator();
         while(listIter.hasNext()){
@@ -24,7 +24,7 @@ public class Plugin {
         }
     }
 
-    private void walkTreeImpl(Node node, Consumer<Node> visitor) {
+    static private void walkTreeImpl(Node node, Consumer<Node> visitor) {
         visitor.accept(node);
         if (node instanceof Parent) {
             ((Parent) node).getChildrenUnmodifiable()

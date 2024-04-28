@@ -15,6 +15,13 @@
             <artifactId>javafx-controls</artifactId>
             <version>13</version>
         </dependency>
+        <dependency>
+            <groupId>org.kds</groupId>
+            <artifactId>gui-driver</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>/home/kds/src/private/cross-gui-driver/src/drivers/java/gui-driver/target/gui-driver-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

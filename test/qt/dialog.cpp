@@ -9,6 +9,7 @@
 #include <QRadioButton>
 #include <QApplication>
 #include <QTextStream>
+#include <QLineEdit>
 
 #include <iostream>
 #include <qwindowdefs.h>
@@ -18,6 +19,7 @@ CustomDialog::CustomDialog(QWidget *parent) : QDialog(parent)
     QGridLayout *gridbox = new QGridLayout;
     gridbox->addWidget(setupRadioBox(),0,0);
     gridbox->addWidget(setupCheckBox(),1,0);
+    gridbox->addLayout(setupTextInput(),2,0);
     gridbox->addLayout(setupTable(),0,1,-1,-1);
 
     setLayout(gridbox);
@@ -36,7 +38,7 @@ void CustomDialog::walkTree()
             top = parent;
         }
 
-        std::cout << "Take top widget with name " << top->objectName().toStdString() << std::endl;
+        //std::cout << "Take top widget with name " << top->objectName().toStdString() << std::endl;
 
         int level = 0;
         QWidgetList wl = { top };
@@ -64,10 +66,6 @@ void CustomDialog::walkTree()
                 for (QObject* ch_obj : w->children()) {
                     if (QWidget* ch_w = dynamic_cast<QWidget*>(ch_obj)) {
                         ch_wl.append(ch_w);
-                        //assert(ch_w->parentWidget() == w);
-                        
-                        // std::cout << "Append child " << ch_w << " for parent " << w 
-                        //     << " child name " << ch_w->objectName().toStdString() << " parent name " << w->objectName().toStdString() << std::endl;
                     }
                 }
             }
@@ -136,5 +134,13 @@ QLayout* CustomDialog::setupTable()
     button->setObjectName("btn1");
     vbox->addWidget(button);
 
+    return vbox;
+}
+
+QLayout* CustomDialog::setupTextInput()
+{
+    QVBoxLayout *vbox = new QVBoxLayout;
+    QLineEdit* edit = new QLineEdit("Text", this);
+    vbox->addWidget(edit);
     return vbox;
 }

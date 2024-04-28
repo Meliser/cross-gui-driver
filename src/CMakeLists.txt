@@ -15,6 +15,8 @@ add_subdirectory(drivers)
 set(server_src 
     main.cpp
     endpoints/session.cpp
+    endpoints/title.cpp
+    endpoints/window_rect.cpp
 )
 
 #add_executable(${PROJECT_NAME} ${server_src})

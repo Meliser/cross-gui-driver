@@ -16,4 +16,5 @@ private:
     QGroupBox* setupCheckBox();
     QGroupBox* setupRadioBox();
     QLayout* setupTable();
+    QLayout* setupTextInput();
 };

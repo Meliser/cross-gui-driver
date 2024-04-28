@@ -16,6 +16,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+import org.kds.Plugin;
+
 
 /**
  * JavaFX App
@@ -48,6 +50,8 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        Plugin nativeLib = new Plugin();
+        nativeLib.init_driver("NICE");
         launch();
     }
 
