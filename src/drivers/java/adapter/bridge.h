@@ -65,9 +65,10 @@ namespace kds
     {
     public:
         //Controller();
+        static std::string getText(JNIEnv* env, const std::string& name);
         static void walkTree(JNIEnv* env);
     private:
-        static constexpr std::string_view class_name = "kds/org/Controller";
+        static constexpr std::string_view class_name = "org/kds/Controller";
     };
 }
 

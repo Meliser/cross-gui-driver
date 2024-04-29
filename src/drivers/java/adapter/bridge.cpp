@@ -106,6 +106,33 @@ ClassLoader ClassLoader::getSystemClassLoader(JNIEnv* env) {
 
 namespace kds
 {
+std::string Controller::getText(JNIEnv* env, const std::string& name)
+{
+    jclass cls = findClass(env, class_name);
+    jmethodID m_id = getStaticMethodId(env, cls, "getText", "(Ljava/lang/String;)Ljava/lang/String;");
+
+    jstring jname = env->NewStringUTF(name.c_str());
+    if (!jname || env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+        throw std::runtime_error{std::string{"Failed to create string"}};
+    }
+
+    jobject obj = env->CallStaticObjectMethod(cls, m_id, jname);
+    if (!obj || env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+        throw std::runtime_error{std::string{"Failed to call getText"}};
+    }
+    const char* raw = env->GetStringUTFChars((jstring)obj, NULL);
+    if (!raw || env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+        throw std::runtime_error{std::string{"Failed to call GetStringUTFChars"}};
+    }
+    return std::string{raw};
+}
+
 void Controller::walkTree(JNIEnv* env)
 {
     jclass cls = findClass(env, class_name);
@@ -123,10 +150,10 @@ void Controller::walkTree(JNIEnv* env)
 
 void defineClass(JNIEnv* env, const java::lang::ClassLoader& loader)
 {
-    std::ifstream fs("/home/kds/src/private/cross-gui-driver/src/drivers/java/gui-control/target/classes/kds/org/Controller.class");
+    std::ifstream fs("/home/kds/src/private/cross-gui-driver/src/drivers/java/gui-control/target/classes/org/kds/Controller.class");
     std::ostringstream sstr;
     sstr << fs.rdbuf();
     auto str = sstr.str();
     const signed char* buf = (signed char*)str.data();
-    jclass ctl = env->DefineClass("kds/org/Controller", loader.getObj(), buf, str.length());
+    jclass ctl = env->DefineClass("org/kds/Controller", loader.getObj(), buf, str.length());
 }

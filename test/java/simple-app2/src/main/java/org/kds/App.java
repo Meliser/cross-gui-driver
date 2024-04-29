@@ -1,4 +1,4 @@
-package kds.org;
+package org.kds;
 
 import java.util.function.Consumer;
 
@@ -26,10 +26,11 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        System.out.println("GUI main thread " + Thread.currentThread().getId());
          
         Button btn = new Button();
         btn.setText("Click!");
-        btn.setId("Btn1");
+        btn.setId("btn1");
         btn.setTooltip(new Tooltip(btn.getId()));
          
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -46,14 +47,15 @@ public class App extends Application {
         
         Group group = new Group(btn);
 
-        FlowPane root = new FlowPane(label, group);     
-        Scene scene = new Scene(root, 300, 150);    
+        FlowPane root = new FlowPane(label, group);
+        Scene scene = new Scene(root, 300, 150);
         stage.setScene(scene);
          
         stage.show();
     }
 
     public static void main(String[] args) {
+        System.out.println("Main thread " + Thread.currentThread().getId());
         Plugin nativeLib = new Plugin();
         nativeLib.init_driver("NICE");
         launch();

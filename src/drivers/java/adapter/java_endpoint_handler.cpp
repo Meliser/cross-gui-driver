@@ -69,15 +69,17 @@ JavaEndpointHandler::JavaEndpointHandler(void* config)
 
 std::string JavaEndpointHandler::getText(const std::string& name)
 {
+    //nameAll();
+
     std::cout << "java get text th" << std::this_thread::get_id() <<std::endl;
     JavaEndpointHandler::AutoDetachT env = get_env();
 
     if (!env)
         return "NO ENV";
+    // nameAll();
+    // return "DDDD";
 
-    kds::Controller::walkTree(env.get());
-
-    return "FOUND!";
+    return kds::Controller::getText(env.get(), name);
 }
 
 std::string JavaEndpointHandler::getTitle(const std::string& name)
@@ -93,5 +95,6 @@ std::optional<WidgetRect> JavaEndpointHandler::getWidgetRect(const std::string& 
 
 void JavaEndpointHandler::nameAll()
 {
-
+    JavaEndpointHandler::AutoDetachT env = get_env();
+    kds::Controller::walkTree(env.get());
 }
