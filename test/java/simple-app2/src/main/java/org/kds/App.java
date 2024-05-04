@@ -1,5 +1,6 @@
 package org.kds;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import javafx.application.Application;
@@ -54,7 +55,7 @@ public class App extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Main thread " + Thread.currentThread().getId());
         Plugin nativeLib = new Plugin();
         nativeLib.init_driver("NICE");
