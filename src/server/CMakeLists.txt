@@ -18,6 +18,7 @@ set(${PROJECT_NAME}_src
 )
 
 add_library(${PROJECT_NAME} SHARED ${cgd-server_src})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} ${LIBHTTPSERVER_LIBRARIES} nlohmann_json::nlohmann_json Boost::filesystem cgd-interface)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 

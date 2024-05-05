@@ -10,7 +10,7 @@ using HandlerType = bool();
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3) {
+    if (argc != 2) {
         std::cout << "Pass 2 args" << std::endl;
         return -1;
     }
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     }
 
     CustomDialog dlg;
-    dlg.walkTree();
+    //dlg.walkTree();
     dlg.exec();
  
     return a.exec();

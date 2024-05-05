@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include "bridge.h"
+#include "logger.h"
 
 std::unique_ptr<EndpointHandlerI> create(void *config) {
   return std::make_unique<JavaEndpointHandler>(config);
@@ -50,6 +51,7 @@ static jobject aa;
 
 JavaEndpointHandler::JavaEndpointHandler(void* config)
 {
+    LOG_DEBUG("HELLLLLOOOOO !!!!");
     std::cout << "JavaEndpointHandler" << std::endl;
     struct JavaConf{
         JNIEnv* env;
@@ -69,6 +71,7 @@ JavaEndpointHandler::JavaEndpointHandler(void* config)
 std::string JavaEndpointHandler::getText(const std::string& name)
 {
     //nameAll();
+    LOG_DEBUG("java !!!!");
 
     std::cout << "java get text th" << std::this_thread::get_id() <<std::endl;
     JavaEndpointHandler::AutoDetachT env = get_env();

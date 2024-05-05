@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <optional>
+#include <memory>
 
 struct WidgetRect
 {
@@ -19,3 +20,6 @@ public:
     virtual std::optional<WidgetRect> getWidgetRect(const std::string& name) = 0;
     virtual void nameAll() = 0;
 };
+
+using HandlerType = std::unique_ptr<EndpointHandlerI>(void*);
+std::unique_ptr<EndpointHandlerI> create(void* config);

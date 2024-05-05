@@ -4,11 +4,13 @@ project(cgd-utils)
 
 set(${PROJECT_NAME}_src
     elf_parser.cpp
+    logger.cpp
 )
 add_library(${PROJECT_NAME} STATIC ${cgd-utils_src})
 target_include_directories(${PROJECT_NAME} INTERFACE .)
 target_sources(${PROJECT_NAME} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/elf_parser.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/logger.h
 )
 
 # todo: why?

@@ -8,11 +8,13 @@
 
 #include <string_view>
 
+#include "entry.h"
+
 #include "endpoints/session.h"
 #include "endpoints/title.h"
 #include "endpoints/window_rect.h"
 
-using HandlerType = std::unique_ptr<EndpointHandlerI>(void*);
+
 std::function<HandlerType> getEndpointHandler(const std::string& type)
 {
     if ("qt" == type) {
@@ -35,12 +37,12 @@ std::function<HandlerType> getEndpointHandler(const std::string& type)
 
 namespace
 {
-    class DriverApp
+    class ServerApp
     {
     public:
-        DriverApp(const char* name, void* config) : m_ws(httpserver::create_webserver().port(8080))
+        ServerApp(const char* name, void* config) : m_ws(httpserver::create_webserver().port(8080))
         {
-            std::cout << "Construct DriverApp" << std::endl;
+            std::cout << "Construct ServerApp" << std::endl;
 
             m_plugin_handle = getEndpointHandler(name);
             std::shared_ptr<EndpointHandlerI> h = m_plugin_handle(config);
@@ -54,9 +56,9 @@ namespace
 
             m_ws.start(false);
         }
-        ~DriverApp()
+        ~ServerApp()
         {
-            std::cout << "Destruct DriverApp" << std::endl;
+            std::cout << "Destruct ServerApp" << std::endl;
         }
     private:
         std::function<HandlerType> m_plugin_handle;
@@ -66,14 +68,23 @@ namespace
         std::unique_ptr<window_rect> m_window_rect_h;
     };
 
-    std::unique_ptr<DriverApp> global_app;
+    std::unique_ptr<ServerApp> global_app;
 }
 
 // todo kds: hidden
 __attribute__ ((visibility ("default"))) bool init(const char* name, void* config)
 {
-    std::cout << "Driver init for " << name << std::endl;
-    global_app.reset(new DriverApp(name, config));
+    try {
+        std::cout << "Driver init for " << name << std::endl;
+        global_app.reset(new ServerApp(name, config));
+    }
+    catch(const std::exception& e) {
+        std::cout << e.what() << std::endl;
+        return false;
+    }
+    catch(...) {
+        return false;
+    }
     return true;
 }
 
@@ -86,8 +97,3 @@ BOOST_DLL_ALIAS(
     init,
     init_driver
 )
-
-// int main(int argc, char** argv) {
-//     std::call_once(inited, init);
-//     return 0;
-// }
